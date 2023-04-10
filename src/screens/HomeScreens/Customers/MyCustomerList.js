@@ -110,14 +110,14 @@ const MyCustomerList = ({navigation}) => {
                         item.LegalName.substring(0, 18)+".."
                         }
                       </Text>
-                      <Text
+                      {/* <Text
                         style={{
                           color: '#BDBDBD',
                           fontSize: 12,
                           fontWeight: '500',
                         }}>
                         GST NO- {item.GSTIN}
-                      </Text>
+                      </Text> */}
                       <Text
                         style={{
                           color: '#00A9FF',

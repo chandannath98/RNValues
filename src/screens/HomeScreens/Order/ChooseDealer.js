@@ -109,7 +109,7 @@ const ChooseDealer = ({navigation}) => {
                         item.LegalName.substring(0, 18)+".."
                         }
                       </Text>
-                      <Text
+                      {/* <Text
                         style={{
                           color: '#BDBDBD',
                           fontSize: 12,
@@ -125,7 +125,7 @@ const ChooseDealer = ({navigation}) => {
                           textDecorationLine: 'underline',
                         }}>
                         {item.Phone}
-                      </Text>
+                      </Text> */}
                     </View>
                     <View
                       style={{

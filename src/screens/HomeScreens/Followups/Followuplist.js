@@ -109,15 +109,15 @@ const Followupslist = ({ navigation }) => {
                             item?.CustomerName?.substring(0, 18) + ".."
                         }
                       </Text>
-                      <Text
+                      {/* <Text
                         style={{
                           color: '#BDBDBD',
                           fontSize: 12,
                           fontWeight: '500',
                         }}>
                         GST NO- {item.CustomerGst}
-                      </Text>
-                      <Text
+                      </Text> */}
+                      {/* <Text
                         style={{
                           color: '#00A9FF',
                           fontSize: 12,
@@ -125,7 +125,7 @@ const Followupslist = ({ navigation }) => {
                           textDecorationLine: 'underline',
                         }}>
                         {item.CustomerPhone}
-                      </Text>
+                      </Text> */}
                     </View>
                     <View
                       style={{

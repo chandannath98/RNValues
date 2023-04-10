@@ -83,8 +83,6 @@ const [paymenttype,setpaymenttype] = useState('');
 
               <View style={{height:90,width:'50%',justifyContent:'center',}}>
                 <Text style={{fontSize:16}}>Alan Traders</Text>
-                <Text style={{fontSize:12}}>GST NO- ABP4541441411AX</Text>
-                <Text style={{fontSize:12,color:'#00A9FF'}}>+91 9621199878</Text>
               </View>
               <View style={{height:90,width:'25%',justifyContent:'space-around'}}>
                 <Text style={{fontSize:12}}>Pending</Text>

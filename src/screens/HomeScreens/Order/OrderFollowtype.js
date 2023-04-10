@@ -135,14 +135,14 @@ const OrderFollowtype = ({route, navigation}) => {
                   <Text>BANK</Text>
                 </View>
               </View>
-              <View style={{flexDirection: 'row', width: '100%', marginTop: 5}}>
+              {/* <View style={{flexDirection: 'row', width: '100%', marginTop: 5}}>
                 <View style={{width: '50%'}}>
                   <Text>GST</Text>
                 </View>
                 <View style={{width: '50%', alignItems: 'flex-end'}}>
                   <Text>{Filterdealer[0].GSTIN}</Text>
                 </View>
-              </View>
+              </View> */}
               <View style={{flexDirection: 'row', width: '100%', marginTop: 5}}>
                 <View style={{width: '50%'}}>
                   <Text>Total amount pending</Text>
