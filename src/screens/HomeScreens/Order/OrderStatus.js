@@ -137,9 +137,8 @@ const OrderStatus = props => {
       var startDate  = moment(datestart, "DD/MM/YYYY");
       var endDate     = moment(endDate, "DD/MM/YYYY");
       const results = data.filter((x)=> {
-        const createdDate = moment(x.CreatedAt,"DD/MM/YYYY")
-        const updateDate = moment(x.updatedAt,"DD/MM/YYYY")
-        console.log("sra ",createdDate,createdDate,startDate,endDate)
+        const createdDate = moment(x.CreatedAt,"DD/MM/YYYY").add(5,'hours').add(30,'minutes')
+        const updateDate = moment(x.updatedAt,"DD/MM/YYYY").add(5,'hours').add(30,'minutes')
         return createdDate.isBetween(startDate,endDate) || updateDate.isBetween(startDate,endDate)
       }
       );
@@ -186,22 +185,39 @@ const OrderStatus = props => {
           </View>
         </View>
       </ImageBackground>
-      <View style={styles.searchContainer}>
-        <AntDesign
+      <View
+                  style={{
+                    width: '90%',
+                    borderRadius: 12,
+                    height: 50,
+                    borderWidth: 1,
+                    backgroundColor: '#fff',
+                    margin: 20,
+                    flexDirection: 'row',
+                  }}>
+                  <View
+                    style={{
+                      width: '15%',
+                      height: 50,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <AntDesign
           name="search1"
           color="#000"
           size={20}
           style={{paddingRight: 10}}
         />
-        <TextInput
-          style={styles.inputStyle}
-          autoCorrect={false}
-          value={query}
-          onChangeText={handleSearch}
-          placeholderTextColor={'#000'}
-          placeholder="Search Orders"
-        />
-      </View>
+                  </View>
+
+                  <TextInput
+                    style={{ width: '85%', height: 50 }}
+                    placeholder="Search Orders"
+                    onChangeText={handleSearch}
+                    maxLength={50}
+                    value={query}
+                  />
+                </View>
       <View>
         <RadioButton.Group
           onValueChange={newValue => handleStatusFilter(newValue)}
@@ -847,21 +863,3 @@ const OrderStatus = props => {
 
 export default OrderStatus;
 
-const styles = StyleSheet.create({
-  searchContainer: {
-    flexDirection: 'row',
-    paddingBottom: 10,
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    alignItems: 'flex-start',
-    backgroundColor: '#fff',
-    color: '#000',
-  },
-  inputStyle: {
-    flex: 1,
-    color: '#000',
-    backgroundColor: '#fff',
-  },
-});

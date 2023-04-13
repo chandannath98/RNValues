@@ -8,7 +8,7 @@ import * as actions from '../redux/actions/authaction';
 
 const DefineNavigation = () => {
   const loginData = useSelector(state => state.auth.loginData);
- console.log('loginData',loginData);
+//  console.log('loginData',loginData);
   const [token, setToken] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);

@@ -8,9 +8,9 @@ const Stack = createNativeStackNavigator();
 
 const DrawerTodayFollowups = props => {
 
-  console.log('====================================');
-  console.log('dddddddddd',props);
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log('dddddddddd',props);
+  // console.log('====================================');
   return (
     <Stack.Navigator>
       <Stack.Screen

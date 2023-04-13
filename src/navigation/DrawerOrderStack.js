@@ -23,7 +23,7 @@ const Stack = createNativeStackNavigator();
 
 const DrawerOrderStack = ({route}) => {
   const { itemId } = route.params;
-  console.log(itemId);
+  // console.log(itemId);
   return (
     <Stack.Navigator>
         <Stack.Screen

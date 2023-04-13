@@ -96,7 +96,7 @@ export const handleProductdrop = ProductfilterData => async dispatch => {
     const response = await apiRequest(API.productDataURL + ProductfilterData.data.slug, 'GET');
     dispatch(isDataLoading(false));
     if (response) {
-      console.log(response);
+      // console.log(response);
       // ProductfilterData.navigation.navigate('Product', { dataurl: ProductfilterData.data.slug });
       dispatch(ProductdropFilterSuccess(response));
 
@@ -270,9 +270,9 @@ export function checkinSuccess(CheckinListData) {
 
 // ========== Handle Login API ===================//
 export const handlecheckinputout = checkinoutData => async dispatch => {
-  console.log('====================================');
-  console.log(checkinoutData);
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log(checkinoutData);
+  // console.log('====================================');
     dispatch(isDataLoading(true));
     const response = await apiRequest(API.checkinListDataURL+"/"+checkinoutData.udid, 'PUT',checkinoutData.data);
     dispatch(isDataLoading(false));
@@ -348,12 +348,12 @@ export function GstnoListFilterSuccess(GstnoListData) {
 export const handleCreateCustomer = CreateCustomerData => async dispatch => {
 
   dispatch(isDataLoading(true));
-  console.log('response', API.createorderDataURL);
+  // console.log('response', API.createorderDataURL);
   const response = await apiRequest(API.createorderDataURL, 'GET');
   dispatch(isDataLoading(false));
 
   if (response) {
-    console.log('response=======>', response);
+    // console.log('response=======>', response);
     // checkinData.navigation.replace('OrderFollowtype',{ItemId:checkinData.ItemId});
     dispatch(CreateCustomerSuccess(response));
   }

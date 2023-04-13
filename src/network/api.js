@@ -92,7 +92,7 @@ export const apiRequest = async (
       toastModule.toastMessageBox('Error7');
     }
   } catch (err) {
-    console.log('err', err.message,err.status);
+    // console.log('err', err.message,err.status);
     alert("API NOT WORKING")
     // console.log('err', err);
     // if(err){
