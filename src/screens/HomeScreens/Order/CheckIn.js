@@ -18,6 +18,21 @@ import Loader from '../../../utils/Loader';
 
 const CheckIn = ({route, navigation}) => {
   const {itemId} = route.params;
+
+
+  const handleDealerList = data =>
+  dispatch(actions.handleDealerList({data, navigation}));
+  const loginData = useSelector(state => state.auth.loginData);
+
+useEffect(() => {
+  const data = {
+    type: loginData.data.model,
+    ID: loginData.data.ID,
+    customer: 1,
+  };
+  handleDealerList(data);
+}, []);
+
   const DealerList = useSelector(state => state.dealerlist.DealerListData);
 
   const Filterdealer = DealerList.data.filter(item => item.ID == itemId);
@@ -133,7 +148,7 @@ const CheckIn = ({route, navigation}) => {
     }
   };
  
-  const loginData = useSelector(state => state.auth.loginData);
+  // const loginData = useSelector(state => state.auth.loginData);
 
   const isLoading = useSelector(state => state.loader.isLoading);
   const dispatch = useDispatch();
@@ -243,9 +258,9 @@ const CheckIn = ({route, navigation}) => {
               <Image source={require('../../../assests/UserIcon.png')} />
             </View>
             <View style={{width: '80%', justifyContent: 'center'}}>
-              <Text>{Filterdealer[0].Name}</Text>
+              <Text>{Filterdealer[0]?.Name}</Text>
               {/* <Text>{Filterdealer[0].LegalName}</Text> */}
-              <Text>{Filterdealer[0].Channel}</Text>
+              <Text>{Filterdealer[0]?.Channel}</Text>
             </View>
           </View>
 

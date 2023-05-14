@@ -8,6 +8,10 @@ import {
   FlatList,
   Linking,
   TextInput,
+  ActivityIndicator,
+  Modal,
+  Pressable,
+  StyleSheet
 } from 'react-native';
 import moment from 'moment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -18,10 +22,21 @@ import * as actions from '../../../redux/actions/authaction';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import Geolocation from '@react-native-community/geolocation';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Loader from '../../../utils/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+import { PermissionsAndroid } from 'react-native';
+import { Alert } from 'react-native';
+
+
+
+
 const CheckInList = ({navigation}) => {
+
+
+
+
   const [query, setQuery] = React.useState('');
   const [fullData, setFullData] = React.useState([]);
 
@@ -32,7 +47,7 @@ const CheckInList = ({navigation}) => {
   }, []);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-
+const [loader, setLoader] = useState(true)
   const [value, setValue] = React.useState('all');
   const [datestart, setDatestart] = React.useState(new Date());
   const [openStartModal, setOpenStartModal] = React.useState(false);
@@ -81,7 +96,8 @@ const CheckInList = ({navigation}) => {
   const [totaldistance, settotaldistance] = useState(null);
   const [distance_time, setdistance_time] = useState(null);
   const [pincode, setpincode] = useState(null);
-
+  const [selectedItem, setSelectedItem] = useState({})
+const [modalVisible, setModalVisible] = useState(false)
   const [position, setPosition] = useState({
     latitude: 10,
 
@@ -107,41 +123,167 @@ const CheckInList = ({navigation}) => {
     loading: true,
   });
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      //assign interval to a variable to clear it.
+//   useEffect(() => {
+//     const intervalId = setInterval(() => {
+//       //assign interval to a variable to clear it.
 
-      setState(state => ({data: state.data, error: false, loading: true}));
+//       setState(state => ({data: state.data, error: false, loading: true}));
 
-      //   getDirections();
+//       //   getDirections();
+// try{
+//   // openLocationSettings()
+//   Geolocation.getCurrentPosition(pos => {
+//     const crd = pos.coords;
 
-      Geolocation.getCurrentPosition(pos => {
-        const crd = pos.coords;
+//     //  console.log('crd', crd);
 
-        //  console.log('crd', crd);
+//     setPosition({
+//       latitude: crd.latitude,
 
+//       longitude: crd.longitude,
+
+//       latitudeDelta: 0.09,
+
+//       longitudeDelta: 0.09,
+
+//       accuracy: crd.accuracy,
+
+//       altitude: crd.altitude,
+
+//       heading: crd.heading,
+
+//       speed: crd.speed,
+//     });
+//   });
+// }catch{
+//   console.log("0000")
+  
+// }
+//     }, 2000);
+
+//     return () => clearInterval(intervalId); //This is important
+//   }, [useState]);
+useEffect(() => {
+  
+    openLocationSettings();
+ 
+}, []);
+
+const openLocationSettings = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+
+      if (granted) {
+        GetLocation();
+      } else {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Location Permission',
+            message: 'This app needs to access your location',
+            buttonPositive: 'OK',
+          },
+        );
+
+        const granted = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+
+        if (granted) {
+          GetLocation();
+        } else {
+          Alert.alert(
+            'Location Permission Required',
+            'Please grant permission in Permission setting of app setting',
+            [
+              {
+                text: 'OK',
+                onPress: () => Linking.openSettings(),
+              },
+            ],
+          );
+        }
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  } else {
+    Linking.openSettings();
+  }
+};
+
+const GetLocation = () => {
+  const goToLocationSettings = () => {
+    Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
+  };
+
+  const showAlert = (intervalId) => {
+    clearInterval(intervalId);
+    Alert.alert(
+      'Location Required',
+      'Please open location',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            goToLocationSettings();
+            navigation.goBack();
+          },
+        },
+      ],
+    );
+  };
+
+  setState(state => ({ data: state.data, error: false, loading: true }));
+
+  try {
+    Geolocation.getCurrentPosition(
+      position => {
+        const crd = position.coords;
         setPosition({
           latitude: crd.latitude,
-
           longitude: crd.longitude,
-
           latitudeDelta: 0.09,
-
           longitudeDelta: 0.09,
-
           accuracy: crd.accuracy,
-
           altitude: crd.altitude,
-
           heading: crd.heading,
-
           speed: crd.speed,
         });
-      });
-    }, 2000);
+        setLoader(false);
+      },
+      error => {
+        console.log('error');
+        console.log(error);
 
-    return () => clearInterval(intervalId); //This is important
-  }, [useState]);
+        // showAlert();
+      },
+    );
+
+    Geolocation.watchPosition(
+      position => {
+        const crd = position.coords;
+
+        console.log('000');
+      },
+      error => {
+        console.log(error);
+        showAlert();
+      
+          
+        }
+      );
+    } catch (error) {
+     
+      // showAlert();
+    }
+  
+}
+
+
 
   // console.log('1==>', position);
   useFocusEffect(
@@ -340,12 +482,73 @@ const CheckInList = ({navigation}) => {
     }
   };
 
+
+
+if(loader){
+  return(
+    <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
+
+      <ActivityIndicator size={"large"} />
+    </View>
+  )
+}
+
+
+
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <ImageBackground
         style={{flex: 0.09}}
         source={require('../../../assests/Dashboard/UserloginBG.png')}>
         <View style={{height: 60, width: '100%', flexDirection: 'row'}}>
+
+
+
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={{flex:1,alignItems:"center",justifyContent:"center",backgroundColor:"black",opacity:0.7}}>
+          <View style={{backgroundColor:"white",elevation:10,width:200,height:200,borderRadius:5,alignItems:"center",justifyContent:"center"}}>
+
+
+            <TouchableOpacity 
+            onPress={()=>{
+              handleSubmitorder(selectedItem)
+            setModalVisible(false)
+            }}
+            style={{marginVertical:20,borderColor:"black",borderWidth:1,width:120,padding:10,alignItems:"center",justifyContent:"center",borderRadius:5,borderColor:"#00A9FF"}}>
+          <Text style={{fontSize:17,fontWeight:"700",color:"#00A9FF"}}>Check In</Text>
+
+            </TouchableOpacity>
+
+
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate("OrderForm",{loginData:loginData,custId:selectedItem.id})
+              setModalVisible(false)
+              }} style={{marginVertical:20,borderColor:"black",borderWidth:1,width:120,padding:10,alignItems:"center",justifyContent:"center",borderRadius:5,borderColor:"#00A9FF"}}>
+
+          <Text style={{fontSize:17,fontWeight:"700",color:"#00A9FF"}}>Order Form</Text>
+            </TouchableOpacity>
+
+          </View>
+       
+        </View>
+      </Modal>
+
+
+
+
+
+
+
+
+
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={{
@@ -649,7 +852,13 @@ const CheckInList = ({navigation}) => {
                 // ItemSeparatorComponent={() => Separator()}
                 renderItem={({item}) => (
                   <TouchableOpacity
-                    onPress={() => handleSubmitorder(item)}
+                    onPress={() => {
+                      // console.log(item)
+                      setSelectedItem(item)
+                      setModalVisible(true)
+              // handleSubmitorder(item)
+
+                    }}
                     //  onPress={() => navigation.navigate("Checkincamera",{itemId:item.id,datasend:position,pincodeaddress:pincode,totaldistance:totaldistance,distancetime:distance_time,})}
                   >
                     <View
@@ -829,7 +1038,7 @@ const CheckInList = ({navigation}) => {
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('CreateCheckinsecond')}
+                  onPress={() => handleSubmit()}
                   style={{
                     backgroundColor: '#00BB29',
                     width: 130,
@@ -850,3 +1059,11 @@ const CheckInList = ({navigation}) => {
 };
 
 export default CheckInList;
+
+
+
+const styles=StyleSheet.create({
+
+
+  
+})

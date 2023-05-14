@@ -23,6 +23,13 @@ import OrderFollowtype from '../screens/HomeScreens/Order/OrderFollowtype';
 import Camera from '../screens/HomeScreens/Order/Camera';
 import ExpenseCreate from '../screens/HomeScreens/Expense/ExpenseCreate';
 import ExpenseList from '../screens/HomeScreens/Expense/ExpenseList';
+import Checkincamera from '../screens/HomeScreens/Checkin/Checkincamera';
+import OrderForm from '../screens/OrderForm/OrderForm';
+import OrderSelector from '../screens/OrderForm/OrderSelector';
+import CustomerOrderList from '../screens/HomeScreens/Checkin/CutomerOrdersList';
+import OrdersList from '../screens/HomeScreens/Checkin/OrdersList';
+import OrderDetails from '../screens/HomeScreens/Checkin/OrderDetails';
+import OrderFormSingleorder from '../screens/OrderForm/OrderFormSingleOrder';
 
 const Stack = createNativeStackNavigator();
 
@@ -76,6 +83,26 @@ const DashboardNavigation = () => {
         component={DrawerCheckinStack}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="CustomerOrderList"
+        component={CustomerOrderList}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="OrdersList"
+        component={OrdersList}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="OrderDetails"
+        component={OrderDetails}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="OrderFormSingleorder"
+        component={OrderFormSingleorder}
+        options={{headerShown: false}}
+      />
          <Stack.Screen
         name="CheckInList"
         component={CheckInList}
@@ -107,6 +134,11 @@ const DashboardNavigation = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="Checkincamera"
+        component={Checkincamera}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="OrderFollowtype"
         component={OrderFollowtype}
         options={{headerShown: false}}
@@ -124,6 +156,17 @@ const DashboardNavigation = () => {
          <Stack.Screen
         name="ExpenseCreate"
         component={ExpenseCreate}
+        options={{headerShown: false}}
+      />
+
+         <Stack.Screen
+        name="OrderForm"
+        component={OrderForm}
+        options={{headerShown: false}}
+      />
+         <Stack.Screen
+        name="OrderSelector"
+        component={OrderSelector}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -232,7 +232,9 @@ export const handlecheckin = checkinData => async dispatch => {
   dispatch(isDataLoading(false));
  
   if (response) {
-    checkinData.navigation.replace('OrderFollowtype', { ItemId: checkinData.ItemId, OrderType: response.data.ActionRemark });
+    // checkinData.navigation.replace('OrderFollowtype', { ItemId: checkinData.ItemId, OrderType: response.data.ActionRemark });
+    checkinData.navigation.goBack()
+
     dispatch(checkinSuccess(response));
   }
 };
@@ -246,7 +248,8 @@ export const handlecheckinput = checkinData => async dispatch => {
  
   if (response) {
     if(checkinData.Usertypedata == 1){
-      checkinData.navigation.replace('OrderFollowtype', { ItemId: checkinData.ItemId, OrderType: checkinData.data.action});
+      // checkinData.navigation.replace('OrderFollowtype', { ItemId: checkinData.ItemId, OrderType: checkinData.data.action});
+      checkinData.navigation.goBack()
       dispatch(checkinSuccess(response));
     }
     else{

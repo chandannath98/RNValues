@@ -1,6 +1,6 @@
 // In App.js in a new project
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   ImageBackground,
@@ -8,6 +8,10 @@ import {
   TouchableOpacity,
   TextInput,
   Text,
+  Platform,
+  PermissionsAndroid,
+  Alert,
+  Linking,
 } from 'react-native';
 
 import Layout from '../../utils/layout';
@@ -17,6 +21,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../redux/actions/authaction';
 import Loader from '../../utils/Loader';
+import Geolocation from '@react-native-community/geolocation';
 
 const Login = ({ route, navigation }) => {
   const { itemId } = route.params;
@@ -76,6 +81,127 @@ const Login = ({ route, navigation }) => {
     }
     //navigation.navigate('FirstStepVerification');
   };
+
+
+
+
+
+
+
+  useEffect(() => {
+  
+    openLocationSettings();
+ 
+}, []);
+
+const openLocationSettings = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+
+      if (granted) {
+        GetLocation();
+      } else {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Location Permission',
+            message: 'This app needs to access your location',
+            buttonPositive: 'OK',
+          },
+        );
+
+        const granted = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+
+        if (granted) {
+          GetLocation();
+        } else {
+          Alert.alert(
+            'Location Permission Required',
+            'Please grant permission in Permission setting of app setting',
+            [
+              {
+                text: 'OK',
+                onPress: () => Linking.openSettings(),
+              },
+            ],
+          );
+        }
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  } else {
+    Linking.openSettings();
+  }
+};
+
+const GetLocation = () => {
+  const goToLocationSettings = () => {
+    Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
+  };
+
+  const showAlert = (intervalId) => {
+    clearInterval(intervalId);
+    Alert.alert(
+      'Location Required',
+      'Please open location',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            goToLocationSettings();
+           
+          },
+        },
+      ],
+    );
+  };
+
+ 
+
+  
+    Geolocation.getCurrentPosition(
+      position => {
+        const crd = position.coords;
+        
+       
+      },
+      error => {
+        console.log('error');
+        console.log(error);
+
+        // showAlert();
+      },
+    );
+    Geolocation.watchPosition(
+      position => {
+        const crd = position.coords;
+
+        console.log('000');
+      },
+      error => {
+        
+      
+          
+        })
+
+  
+  
+}
+
+
+
+
+
+
+
+
+
 
   return (
     <Layout>

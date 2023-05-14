@@ -97,7 +97,7 @@ const Product = ({ route, navigation }) => {
     <View style={{ flex: 1 }}>
 
       <ImageBackground
-        style={{ flex:1
+        style={{ height:150
           , width: '100%' }}
         source={require('../../assests/Dashboard/UserloginBG.png')}>
         <View style={{ height: 65, width: '100%', flexDirection: 'row' }}>
@@ -156,7 +156,7 @@ const Product = ({ route, navigation }) => {
           <TextInput
             onChangeText={(text) => searchFilterFunction(text)}
             value={search}
-            // placeholder='Search with Id'
+            placeholder='Search'
             style={{
               width: '90%',
               height: 45,
@@ -167,7 +167,7 @@ const Product = ({ route, navigation }) => {
         </View>
       </ImageBackground>
 
-      <View style={{ height: '80%', width: '100%',alignItems:'center',marginLeft:-5 }}>
+      <View style={{ flex:1}}>
         <FlatList
           data={filteredDataSource}
           numColumns={2}

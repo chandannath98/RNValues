@@ -705,7 +705,28 @@ const CustomDrawer = props => {
                 }}></View>
               <View
                 style={{ width: '80%', height: 60, justifyContent: 'center' }}>
-                <Text style={{ fontWeight: '500', fontSize: 14 }}>Check-in</Text>
+                <Text style={{ fontWeight: '500', fontSize: 14 }}>Check-in Customers</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate('CustomerOrderList')}
+              style={{
+                height: 60,
+                width: '100%',
+                borderWidth: 0.5,
+                borderColor: '#EDEDED',
+                flexDirection: 'row',
+              }}>
+              <View
+                style={{
+                  width: '20%',
+                  height: 60,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}></View>
+              <View
+                style={{ width: '80%', height: 60, justifyContent: 'center' }}>
+                <Text style={{ fontWeight: '500', fontSize: 14 }}>Customer Order List</Text>
               </View>
             </TouchableOpacity>
           </View>

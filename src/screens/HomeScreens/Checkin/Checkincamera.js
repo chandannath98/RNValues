@@ -30,7 +30,10 @@ import * as Progress from 'react-native-progress';
 
 const Checkincamera = ({route, navigation}) => {
 
-  const {datasend, itemId ,pincodeaddress} = route.params;
+
+console.log(route.params)
+
+  const {datasend, itemId ,pincodeaddress} = route.params
 
   const loginData = useSelector(state => state.auth.loginData);
 
@@ -278,10 +281,13 @@ const Checkincamera = ({route, navigation}) => {
         
       })
       .then(response => {
+        console.log(response.data)
         setShowProgessBar(false)
        navigation.replace('OrderFollowList', { ItemId: itemId, udid:response.data.data.UUID });
       })
       .catch(error => {
+        console.log("error")
+        console.log(error)
         setShowProgessBar(false)
       });
   };

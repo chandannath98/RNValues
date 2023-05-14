@@ -40,8 +40,8 @@ const CreateCheckinsecond = ({route, navigation}) => {
   );
 
   useEffect(() => {
-    dropdowngetfunc();
     getData();
+    dropdowngetfunc();
   }, []);
 
   const [udid,setcheckinstatus] = useState('');
@@ -49,17 +49,17 @@ const CreateCheckinsecond = ({route, navigation}) => {
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('udiddata')
+      console.log(value)
       if(value) {
         setcheckinstatus(value)
       }
     } catch(e) {
+      console.log(e)
       //setcheckinstatus(null)
     }
   }
 
-console.log('====================================');
-console.log(udid);
-console.log('====================================');
+
   const [selectedsubcattype, setSelectedsubcattype] = useState('');
   const [subcattype, setsubcattype] = useState([]);
 
@@ -233,7 +233,12 @@ const getDirections = async () => {
 // console.log(position);
 // console.log('====================================');
   const dispatch = useDispatch();
-  const handlecheckout = data => dispatch(actions.handlecheckout({data, navigation,udid}));
+  const handlecheckout =async data => {
+    console.log(data,navigation,udid) 
+  
+ await dispatch(actions.handlecheckout({data, navigation,udid}))
+    }
+    
   const attendancemarked  = () =>{
     const datasend = {
       meeting_time: 30,
@@ -246,6 +251,9 @@ const getDirections = async () => {
       interested_product: selectedsubcattype.toString(),
 
     };
+    console.log("222")
+    console.log("222")
+    console.log("222")
    handlecheckout(datasend)
     // navigation.navigate("CreateCheckin")
   }
@@ -292,7 +300,9 @@ const getDirections = async () => {
     }
     var UserlatValid = false;
     if (position.latitude == 10) {
-      alert('Internet Problem');
+      alert("Cant fetch location please turn on location");
+
+
     } 
      else {
       UserlatValid = true;
@@ -302,7 +312,8 @@ const getDirections = async () => {
 
     var UserlongValid = false;
     if (position.longitude == 10) {
-      alert('Internet Problem');
+      alert("Cant fetch location please turn on location");
+
     } 
     else {
       UserlongValid = true;

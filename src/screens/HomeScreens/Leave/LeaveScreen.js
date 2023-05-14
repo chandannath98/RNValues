@@ -261,7 +261,7 @@ const LeaveScreen = ({navigation}) => {
           </View>
         </View>
       </View>
-      {fullData.length == 0 ? (
+      {fullData?.length == 0 ? (
         <View style={{width: '100%', height: '85%', alignItems: 'center'}}>
           <View
             style={{

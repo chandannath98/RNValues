@@ -12,6 +12,8 @@ import {
   Modal,
   Dimensions,
   PermissionsAndroid,
+  Platform,
+  Linking,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useSelector, useDispatch} from 'react-redux';
@@ -28,6 +30,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Progress from 'react-native-progress';
+import { Alert } from 'react-native';
 
 const CreateOrder = ({route, navigation}) => {
   const loginData = useSelector(state => state.auth.loginData);
@@ -100,40 +103,154 @@ const CreateOrder = ({route, navigation}) => {
   });
 
   useEffect(() => {
+    let intervalId;
+    openLocationSettings();
+    return () => clearInterval(intervalId);
+  }, []);
+  const openLocationSettings = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        
+  
+        if (granted) {
+          // console.log(granted)
+          GetLocation();
+        } else {
+          const shouldShowAlert = true
+  
+          if (shouldShowAlert) {
+            await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+              {
+                title: 'Location Permission',
+                message: 'This app needs to access your location',
+                buttonPositive: 'OK',
+              },
+            );
+  
+            const granted = await PermissionsAndroid.check(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            );
+  
+            if (granted) {
+              GetLocation();
+            } else {
+              Alert.alert(
+                'Location Permission Required',
+                'Please grant permission in Permission setting of app setting',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => Linking.openSettings(),
+                  },
+                ],
+              );
+            }
+          } else {
+            Alert.alert(
+              'Location Permission Required',
+              'Please grant permission in Permission setting of app setting',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => Linking.openSettings(),
+                },
+              ],
+            );
+          }
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    } else {
+      Linking.openSettings();
+    }
+  };
+  
+  const GetLocation = () => {
+    const goToLocationSettings = () => {
+      Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
+  
+    }
+  
+    const showAlert = () => {
+      clearInterval(intervalId);
+      Alert.alert(
+        "Location Required",
+        "Please open location",
+        [
+          {
+            text: "OK",
+            onPress: () =>{ goToLocationSettings()
+            navigation.goBack()
+            }
+          }
+        ]
+      );
+    }
+  
     const intervalId = setInterval(() => {
-      //assign interval to a variable to clear it.
-
-      setState(state => ({data: state.data, error: false, loading: true}));
-
-      //   getDirections();
-
-      Geolocation.getCurrentPosition(pos => {
-        const crd = pos.coords;
-
-        //  console.log('crd', crd);
-
-        setPosition({
-          latitude: crd.latitude,
-
-          longitude: crd.longitude,
-
-          latitudeDelta: 0.09,
-
-          longitudeDelta: 0.09,
-
-          accuracy: crd.accuracy,
-
-          altitude: crd.altitude,
-
-          heading: crd.heading,
-
-          speed: crd.speed,
-        });
-      });
+      setState(state => ({ data: state.data, error: false, loading: true }));
+  
+      try {
+        Geolocation.getCurrentPosition(
+         
+            //do stuff with location
+            (position) => {
+              const crd = position.coords;
+              setPosition({
+                latitude: crd.latitude,
+                longitude: crd.longitude,
+                latitudeDelta: 0.09,
+                longitudeDelta: 0.09,
+                accuracy: crd.accuracy,
+                altitude: crd.altitude,
+                heading: crd.heading,
+                speed: crd.speed,
+              });
+          },
+          (error) => {
+            console.log(error);
+            clearInterval(intervalId);
+            showAlert();
+          },
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 300000 }
+        );
+  
+        Geolocation.watchPosition(
+          (position) => {
+            const crd = position.coords;
+            setPosition({
+              latitude: crd.latitude,
+              longitude: crd.longitude,
+              latitudeDelta: 0.09,
+              longitudeDelta: 0.09,
+              accuracy: crd.accuracy,
+              altitude: crd.altitude,
+              heading: crd.heading,
+              speed: crd.speed,
+            });
+          },
+          (error) => {
+            console.log(error);
+            clearInterval(intervalId);
+            showAlert();
+          },
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 300000 }
+        );
+      } catch (error) {
+        console.log(error);
+        clearInterval(intervalId);
+        showAlert();
+      }
     }, 2000);
+  }
 
-    return () => clearInterval(intervalId); //This is important
-  }, [useState]);
+
+    
 
   useFocusEffect(
     useCallback(() => {
@@ -400,12 +517,29 @@ const CreateOrder = ({route, navigation}) => {
       })
       .then(response => {
         setShowProgessBar(false)
+        if(response.data.status===200){
         let sendstatus = response.data.data.status;
         //  console.log('response========>',response.data.data.status);
         let udid = response.data.data.uuid;
         storeData(sendstatus, udid);
         //  await AsyncStorage.setItem('@storage_Key', value)
-        navigation.replace('CreateCheckinsecond');
+        setTimeout(() => {
+          
+          navigation.replace('CreateCheckinsecond');
+        }, 1000);
+        // navigation.goBack()
+        // console.log(navigation.replace)
+        }else{
+          try{
+
+            Alert.alert(response.data.message?.phone[0])
+            Alert.alert("response.data.message?.phone[0]")
+            console.log(response.data.message)
+          }catch{
+
+            Alert.alert("Something went wrong, Please check the form")
+          }
+        }
       })
       .catch(error => {
         console.log('response========>', error);
@@ -532,7 +666,16 @@ const CreateOrder = ({route, navigation}) => {
     }
     var UserlatValid = false;
     if (position.latitude == 10) {
-      alert('Internet Problem');
+      Alert.alert(
+        'Location Not Available',
+        'Please Turn on Location',
+        [
+          {
+            text: 'OK',
+            onPress: () => Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS'),
+          },
+        ],
+      );
     } 
      else {
       UserlatValid = true;
@@ -542,7 +685,17 @@ const CreateOrder = ({route, navigation}) => {
 
     var UserlongValid = false;
     if (position.longitude == 10) {
-      alert('Internet Problem');
+      Alert.alert(
+        'Location Not Available',
+        'Please Turn on Location',
+        [
+          {
+            text: 'OK',
+            onPress: () => Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS'),
+          },
+        ],
+      );
+
     } 
     else {
       UserlongValid = true;

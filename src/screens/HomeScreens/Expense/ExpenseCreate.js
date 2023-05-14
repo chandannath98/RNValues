@@ -118,6 +118,7 @@ useEffect(() => {
     setState(state => ({data: state.data, error: false, loading: true}));
 
     //   getDirections();
+    console.log('crd');
 
     Geolocation.getCurrentPosition(pos => {
       const crd = pos.coords;

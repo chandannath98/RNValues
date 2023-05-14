@@ -19,13 +19,37 @@ import Loader from '../../../utils/Loader';
 const OrderFollowtype = ({route, navigation}) => {
   const {ItemId, OrderType} = route.params;
   console.log(ItemId);
-  const DealerList = useSelector(state => state.dealerlist.DealerListData);
+
+
+
+
+
+
+
+
+  const handleDealerList = data =>
+  dispatch(actions.handleDealerList({data, navigation}));
+  const loginData = useSelector(state => state.auth.loginData);
+
+useEffect(() => {
+  const data = {
+    type: loginData.data.model,
+    ID: loginData.data.ID,
+    customer: 1,
+  };
+  handleDealerList(data);
+}, []);
+
+
+const DealerList = useSelector(state => state.dealerlist.DealerListData)?useSelector(state => state.dealerlist.DealerListData):[]
+
+
+
   console.log("dea ",DealerList)
-  const Filterdealer = DealerList.data.filter(item => item.ID == ItemId);
+  const Filterdealer = DealerList?.data?.filter(item => item.ID == ItemId);
 
   const GOOGLE_MAPS_APIKEY = 'AIzaSyBsc_32ip44ZxiwytqSxKdczopDmUAFpow';
 
-  const loginData = useSelector(state => state.auth.loginData);
 
   const isLoading = useSelector(state => state.loader.isLoading);
   const dispatch = useDispatch();
@@ -116,9 +140,9 @@ const OrderFollowtype = ({route, navigation}) => {
                 <Image source={require('../../../assests/UserIcon.png')} />
               </View>
               <View style={{width: '80%', justifyContent: 'center'}}>
-                <Text>{Filterdealer[0].Name}</Text>
-                <Text>{Filterdealer[0].LegalName}</Text>
-                <Text>{Filterdealer[0].Channel}</Text>
+                <Text>{Filterdealer[0]?.Name}</Text>
+                <Text>{Filterdealer[0]?.LegalName}</Text>
+                <Text>{Filterdealer[0]?.Channel}</Text>
               </View>
             </View>
 
