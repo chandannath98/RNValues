@@ -22,7 +22,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import {
   SelectList,
   MultipleSelectList,
@@ -335,7 +335,7 @@ const getDirections = async () => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <ImageBackground
-        style={{flex: 0.085}}
+        style={{height:60}}
         source={require('../../../assests/Dashboard/UserloginBG.png')}>
         <View style={{height: 60, width: '100%', flexDirection: 'row'}}>
           <TouchableOpacity
@@ -366,7 +366,7 @@ const getDirections = async () => {
       <View
         style={{
           width: '100%',
-          flex: 0.91,
+          flex: 1,
           alignItems: 'center',
           paddingHorizontal: 15,
           paddingVertical: 5,

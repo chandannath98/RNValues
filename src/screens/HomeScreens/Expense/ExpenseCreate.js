@@ -24,7 +24,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {SelectList} from 'react-native-dropdown-select-list';
 import axios from 'axios';
 import * as ImagePicker from 'react-native-image-picker';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ExpenseCreate = ({route, navigation}) => {

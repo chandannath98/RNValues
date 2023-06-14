@@ -27,7 +27,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {SelectList} from 'react-native-dropdown-select-list';
 import axios from 'axios';
 import * as ImagePicker from 'react-native-image-picker';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Progress from 'react-native-progress';
 import { Alert } from 'react-native';
@@ -725,7 +725,7 @@ const CreateOrder = ({route, navigation}) => {
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       {useloader ? <Loader /> : null}
       <ImageBackground
-        style={{flex: 0.085}}
+        style={{height:60}}
         source={require('../../../assests/Dashboard/UserloginBG.png')}>
         <View style={{height: 60, width: '100%', flexDirection: 'row'}}>
           <TouchableOpacity
@@ -756,7 +756,7 @@ const CreateOrder = ({route, navigation}) => {
       <View
         style={{
           width: '100%',
-          flex: 0.91,
+          flex: 1,
           alignItems: 'center',
           paddingHorizontal: 15,
           paddingVertical: 5,

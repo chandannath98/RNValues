@@ -1,12 +1,16 @@
 import {
   FlatList,
   ImageBackground,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Keyboard,
+  Platform,
+  Button
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
 import {TextInput} from 'react-native';
 import {SelectList} from 'react-native-dropdown-select-list';
@@ -20,7 +24,7 @@ import { Alert } from 'react-native';
 
 export default function OrderForm({navigation, route}) {
 
-
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 const [data, setData] = useState([])
 const [selectorData, setSelectorData] = useState([])
 const [items, setItems] = useState([{
@@ -31,6 +35,11 @@ const [items, setItems] = useState([{
 ])
 
 const loginData=route.params.loginData
+
+
+const isAnyValueZero = items.some(item => item.skuable_id === 0 || item.discount === 0 || item.qty === 0);
+
+const flatListRef = useRef(null);
 
 useEffect(() => {
   
@@ -61,10 +70,7 @@ const OrderAPI = async () => {
   const url = `https://rnsvalves.com/api/v1/store-order-form/cus-type/checkin_customer/customer/${route.params.custId}`;
   const authToken = 'Bearer 1|5XJC4R3nIEvzJzdTMvO4PSYEqjVpdepQeLERUPiC';
 
-  console.log(route.params.custId);
-  console.log(loginData.data.ID);
-  console.log(items);
-
+ 
   const formData = {
     salesable_id: loginData.data.ID,
     orderforms: items,
@@ -79,7 +85,22 @@ const OrderAPI = async () => {
       },
     });
 if(response.status===200){
-  navigation.goBack()
+ 
+
+  Alert.alert(
+    'Done',
+    'Your order is placed successfully',
+    [
+     
+      {
+        text: 'OK',
+        onPress: () =>  navigation.replace("OrdersList",{loginData:loginData,custId:route.params.custId})
+      }
+    ]
+  );
+
+
+
 }else{
 Alert.alert("Please fill all field Correctly")
 }
@@ -96,47 +117,86 @@ Alert.alert("Please fill all field Correctly")
   
 
   return (
-    <View style={{flex: 1}}>
-      <ImageBackground
-        style={{height:60}}
-        source={require('../../assests/Dashboard/UserloginBG.png')}>
-        <View style={{height: 60, width: '100%', flexDirection: 'row'}}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
+    <KeyboardAvoidingView
+    
+    // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    onKeyboardDidShow={() => setKeyboardOpen(true)}
+    onKeyboardDidHide={() => setKeyboardOpen(false)}
+    style={{ flex: 1 }}>
+    <ImageBackground
+      style={{ height: 60 }}
+      source={require('../../assests/Dashboard/UserloginBG.png')}
+    >
+      <View style={{ height: 60, width: '100%', flexDirection: 'row' }}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            width: '15%',
+            height: 60,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Image
+            source={require('../../assests/Dashboard/arrowwhite.png')}
+          />
+        </TouchableOpacity>
+        <View style={{ width: '55%', height: 60, justifyContent: 'center' }}>
+          <Text
             style={{
-              width: '15%',
-              height: 60,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image source={require('../../assests/Dashboard/arrowwhite.png')} />
-          </TouchableOpacity>
-          <View style={{width: '55%', height: 60, justifyContent: 'center'}}>
-            <Text
-              style={{
-                fontSize: 17,
-                fontWeight: '400',
-                color: '#fff',
-                marginLeft: 15,
-              }}>
-              Order Form
-            </Text>
-          </View>
+              fontSize: 17,
+              fontWeight: '400',
+              color: '#fff',
+              marginLeft: 15,
+            }}
+          >
+            Order Form
+          </Text>
         </View>
-      </ImageBackground>
+      </View>
+    </ImageBackground>
+  
+    <FlatList
+    ListFooterComponent={<View style={{height:500,}}>
 
-<FlatList data={items} renderItem={({item,index})=> <ItemCard item={item} items={items} setItems={setItems} data={data} index={index} />} />
-     
-
-<View style={{flexDirection:"row"}}>
+    </View>}
+    ref={flatListRef}
+      data={items}
+      contentContainerStyle={{ paddingBottom: 200 }}
+      renderItem={({ item, index }) => (
+        <ItemCard
+          item={item}
+          items={items}
+          setItems={setItems}
+          data={data}
+          index={index}
+        />
+      )}
+    />
+  {!keyboardOpen && !isAnyValueZero &&
+    <View
+      style={{
+        flexDirection: 'row',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent:"space-between"
+      }}
+    >
       <TouchableOpacity
         onPress={() => {
-          setItems([...items,{
-            
-            "skuable_id": 0,
-            "discount": 0,
-            "qty" : 0
-          }])
+
+          setItems([
+            ...items,
+            {
+              skuable_id: 0,
+              discount: 0,
+              qty: 0,
+            },
+          ]);
+          flatListRef.current.scrollToEnd();
+
         }}
         style={{
           backgroundColor: '#00BB29',
@@ -147,13 +207,12 @@ Alert.alert("Please fill all field Correctly")
           borderRadius: 10,
           alignSelf: 'flex-start',
           marginHorizontal: 20,
-          marginTop: 50,
-        }}>
-        <Text style={{color: '#fff'}}>Add More</Text>
+          marginBottom: 20,
+        }}
+      >
+        <Text style={{ color: '#fff' }}>Add More</Text>
       </TouchableOpacity>
-
-
-
+  
       <TouchableOpacity
         onPress={OrderAPI}
         style={{
@@ -165,15 +224,16 @@ Alert.alert("Please fill all field Correctly")
           borderRadius: 10,
           alignSelf: 'flex-end',
           marginHorizontal: 20,
-          marginTop: 50,
-        }}>
-        <Text style={{color: '#fff'}}>Save</Text>
+          marginBottom: 20,
+        }}
+      >
+        <Text style={{ color: '#fff' }}>Save</Text>
       </TouchableOpacity>
-
-
-      </View>
-
     </View>
+    }
+    
+  </KeyboardAvoidingView>
+  
   );
 }
 

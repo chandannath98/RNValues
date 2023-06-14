@@ -13,7 +13,7 @@ class Layout extends Component {
     return (
       <View style={Styles.container}>
         <SafeAreaView style={{flex: 1}}>
-        <KeyboardAwareScrollView contentContainerStyle={{height: '100%'}}>
+        <KeyboardAwareScrollView contentContainerStyle={{height: '100%',flex:1}}>
           {this.props.children}
         </KeyboardAwareScrollView>
         </SafeAreaView>

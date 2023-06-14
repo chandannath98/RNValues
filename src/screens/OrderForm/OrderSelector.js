@@ -68,7 +68,7 @@ const RadioButtonItem = ({ item, selectedValue, onValueChange }) => {
         setSearchValue(e)
         setData(route.params.data.filter((it) => {
        
-          return (it.id.toString()).includes(e) || it.sku_name.toLowerCase().includes(e)|| it.name.toLowerCase().includes(e)
+          return (it.id.toString()).includes(e) || it.sku_name.toLowerCase().includes(e.toLowerCase())|| it.name.toLowerCase().includes(e.toLowerCase() )|| it.product_sku.toLowerCase().includes(e.toLowerCase() )
         }));
       }}
        

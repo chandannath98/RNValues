@@ -20,7 +20,7 @@ import * as actions from '../../../redux/actions/authaction';
 import Loader from '../../../utils/Loader';
 import {useSelector, useDispatch} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import {SelectList} from 'react-native-dropdown-select-list';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';

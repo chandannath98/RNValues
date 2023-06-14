@@ -26,7 +26,7 @@ const MyCustomerList = ({navigation}) => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <ImageBackground
-        style={{flex: 0.09}}
+        style={{height:30}}
         source={require('../../../assests/Dashboard/UserloginBG.png')}>
         <View style={{height: 60, width: '100%', flexDirection: 'row'}}>
           <TouchableOpacity

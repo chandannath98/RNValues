@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/dist/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 
 const ItemCard = ({item,items,setItems,data,index}) => {
@@ -12,7 +13,7 @@ const ItemCard = ({item,items,setItems,data,index}) => {
 const PickItem=(i)=>{
 
   setSelectedItem(i)
-  console.log(i.id)
+  // console.log(i.id)
   const id=Number(i.id)
   setItems(items.map((i,indexx)=>{ 
                    
@@ -27,6 +28,29 @@ const PickItem=(i)=>{
     
     return (
       <View style={styles.itemCard}>
+
+
+{!(index===0) &&
+<TouchableOpacity
+
+onPress={
+  ()=>{
+    const updatedItems = items.filter((i, itemIndex) => itemIndex !== index);
+    setItems(updatedItems);
+  }
+}
+
+style={{alignSelf:"flex-end"}}>
+<Entypo
+            name="cross"
+            color="grey"
+            size={30}
+            // style={{paddingRight: 10}}
+          />
+</TouchableOpacity>
+}
+
+
         <View style={{width: '100%', marginTop: 10, paddingHorizontal: 5}}>
           <Text
             style={{

@@ -21,7 +21,7 @@ import DatePicker from 'react-native-date-picker';
 import * as actions from '../../../redux/actions/authaction';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Loader from '../../../utils/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -499,7 +499,7 @@ if(loader){
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <ImageBackground
-        style={{flex: 0.09}}
+        style={{height:60}}
         source={require('../../../assests/Dashboard/UserloginBG.png')}>
         <View style={{height: 60, width: '100%', flexDirection: 'row'}}>
 
@@ -708,7 +708,7 @@ if(loader){
           </View>
         </View>
       </View>
-      <View style={{flex: 0.91}}>
+      <View style={{flex: 1}}>
         <View
           style={{
             height: '100%',

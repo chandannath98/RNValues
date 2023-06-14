@@ -40,7 +40,7 @@ const [GSTNO,setGSTNO] = useState("");
     <View style={{flex: 1, backgroundColor: '#fff'}}>
     <KeyboardAwareScrollView>
       <ImageBackground
-        style={{flex: 0.09}}
+        style={{height:60}}
         source={require('../../../assests/Dashboard/UserloginBG.png')}>
         <View style={{height: 60, width: '100%', flexDirection: 'row'}}>
           <TouchableOpacity
@@ -69,7 +69,7 @@ const [GSTNO,setGSTNO] = useState("");
         </View>
       </ImageBackground>
      
-      <View style={{flex: 0.91}}>
+      <View style={{flex: 1}}>
       
         <View style={{height: '100%', width: '100%'}}>
           

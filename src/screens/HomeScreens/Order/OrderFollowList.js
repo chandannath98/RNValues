@@ -13,7 +13,7 @@ import Modal from 'react-native-modal';
 import {RadioButton, Text} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import * as actions from '../../../redux/actions/authaction';
 import Loader from '../../../utils/Loader';
 import * as ImagePicker from 'react-native-image-picker';

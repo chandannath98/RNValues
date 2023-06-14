@@ -15,19 +15,22 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {Button, RadioButton} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import DatePicker from 'react-native-date-picker';
 import * as actions from '../../../redux/actions/authaction';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import Geolocation from '@react-native-community/geolocation';
+// import Geolocation from 'react-native-geolocation-service';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Loader from '../../../utils/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import { PermissionsAndroid } from 'react-native';
 import { Alert } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+import { check, PERMISSIONS, RESULTS, openSettings } from 'react-native-permissions';
 
 
 
@@ -163,125 +166,227 @@ const [modalVisible, setModalVisible] = useState(false)
 
 //     return () => clearInterval(intervalId); //This is important
 //   }, [useState]);
-useEffect(() => {
+
+
+
+
+
+
+
+
+// **************Main****************
+
+
+// useEffect(() => {
   
-    openLocationSettings();
+//     openLocationSettings();
  
+// }, []);
+
+// const openLocationSettings = async () => {
+//   console.log("****")
+//   if (Platform.OS === 'android') {
+//     try {
+//       const granted = await PermissionsAndroid.check(
+//         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+//       );
+
+//       if (granted) {
+//         GetLocation();
+//       } else {
+//         await PermissionsAndroid.request(
+//           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+//           {
+//             title: 'Location Permission',
+//             message: 'This app needs to access your location',
+//             buttonPositive: 'OK',
+//           },
+//         );
+
+//         const granted = await PermissionsAndroid.check(
+//           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+//         );
+
+//         if (granted) {
+//           GetLocation();
+//         } else {
+//           Alert.alert(
+//             'Location Permission Required',
+//             'Please grant permission in Permission setting of app setting',
+//             [
+//               {
+//                 text: 'OK',
+//                 onPress: () => Linking.openSettings(),
+//               },
+//             ],
+//           );
+//         }
+//       }
+//     } catch (err) {
+//       console.warn(err);
+//       Alert.alert(
+//         'Location Permission Required',
+//         'Please grant permission in Permission setting of app setting',
+//         [
+//           {
+//             text: 'OK',
+//             onPress: () => Linking.openSettings(),
+//           },
+//         ],
+//       );
+//     }
+//   } else {
+//     Linking.openSettings();
+//   }
+// };
+
+// const GetLocation = () => {
+//   const goToLocationSettings = () => {
+//     Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
+//   };
+
+//   const showAlert = (intervalId) => {
+//     clearInterval(intervalId);
+//     Alert.alert(
+//       'Location Required',
+//       'Please open location',
+//       [
+//         {
+//           text: 'OK',
+//           onPress: () => {
+//             goToLocationSettings();
+//             navigation.goBack();
+//           },
+//         },
+//       ],
+//     );
+//   };
+
+//   setState(state => ({ data: state.data, error: false, loading: true }));
+
+//   try {
+//     Geolocation.getCurrentPosition(
+//       position => {
+//         const crd = position.coords;
+//         setPosition({
+//           latitude: crd.latitude,
+//           longitude: crd.longitude,
+//           latitudeDelta: 0.09,
+//           longitudeDelta: 0.09,
+//           accuracy: crd.accuracy,
+//           altitude: crd.altitude,
+//           heading: crd.heading,
+//           speed: crd.speed,
+//         });
+//         setLoader(false);
+//       },
+//       error => {
+//         console.log('error');
+//         console.log(error);
+//         showAlert();
+
+//         // showAlert();
+//       },
+//     );
+
+//     Geolocation.watchPosition(
+//       position => {
+//         const crd = position.coords;
+
+//         console.log('000');
+//       },
+//       error => {
+//         console.log(error);
+//         showAlert();
+      
+          
+//         }
+//       );
+//     } catch (error) {
+     
+//       // showAlert();
+//     }
+  
+// }
+
+
+
+
+
+
+
+
+
+useEffect(() => {
+  checkLocationPermission();
 }, []);
 
-const openLocationSettings = async () => {
-  if (Platform.OS === 'android') {
-    try {
-      const granted = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
+const checkLocationPermission = async () => {
+  try {
+    const permissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION); // Change the permission type based on your requirements
 
-      if (granted) {
-        GetLocation();
-      } else {
-        await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Location Permission',
-            message: 'This app needs to access your location',
-            buttonPositive: 'OK',
-          },
-        );
-
-        const granted = await PermissionsAndroid.check(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        );
-
-        if (granted) {
-          GetLocation();
-        } else {
-          Alert.alert(
-            'Location Permission Required',
-            'Please grant permission in Permission setting of app setting',
-            [
-              {
-                text: 'OK',
-                onPress: () => Linking.openSettings(),
-              },
-            ],
-          );
-        }
-      }
-    } catch (err) {
-      console.warn(err);
+    if (permissionStatus === RESULTS.DENIED) {
+      Alert.alert(
+                    'Location Permission Required',
+                    'Please grant permission in Permission setting of app setting',
+                    [
+                      {
+                        text: 'OK',
+                        onPress: () => Linking.openSettings(),
+                      },
+                    ],
+                  );
+    } else if (permissionStatus === RESULTS.GRANTED) {
+      checkLocationEnabled();
     }
-  } else {
-    Linking.openSettings();
+  } catch (error) {
+    console.log('Error checking location permission:', error);
   }
 };
 
-const GetLocation = () => {
-  const goToLocationSettings = () => {
-    Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
-  };
-
-  const showAlert = (intervalId) => {
-    clearInterval(intervalId);
-    Alert.alert(
-      'Location Required',
-      'Please open location',
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            goToLocationSettings();
-            navigation.goBack();
-          },
-        },
-      ],
-    );
-  };
-
-  setState(state => ({ data: state.data, error: false, loading: true }));
-
-  try {
-    Geolocation.getCurrentPosition(
-      position => {
+const checkLocationEnabled = () => {
+  Geolocation.getCurrentPosition(
+    (position) => {
         const crd = position.coords;
-        setPosition({
-          latitude: crd.latitude,
-          longitude: crd.longitude,
-          latitudeDelta: 0.09,
-          longitudeDelta: 0.09,
-          accuracy: crd.accuracy,
-          altitude: crd.altitude,
-          heading: crd.heading,
-          speed: crd.speed,
-        });
-        setLoader(false);
-      },
-      error => {
-        console.log('error');
-        console.log(error);
+        // console.log(crd)
 
-        // showAlert();
-      },
-    );
+      setPosition({
+                  latitude: crd.latitude,
+                  longitude: crd.longitude,
+                  latitudeDelta: 0.09,
+                  longitudeDelta: 0.09,
+                  accuracy: crd.accuracy,
+                  altitude: crd.altitude,
+                  heading: crd.heading,
+                  speed: crd.speed,
+                });
+                setLoader(false);
+    },
+    (error) => {
+      Alert.alert(
+              'Location Required',
+              'Please open location',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
+                    navigation.goBack();
+                  },
+                },
+              ],
+            );
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+  );
+};
 
-    Geolocation.watchPosition(
-      position => {
-        const crd = position.coords;
 
-        console.log('000');
-      },
-      error => {
-        console.log(error);
-        showAlert();
-      
-          
-        }
-      );
-    } catch (error) {
-     
-      // showAlert();
-    }
-  
-}
+
+
+
+
+
 
 
 
@@ -499,47 +604,13 @@ if(loader){
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <ImageBackground
-        style={{flex: 0.09}}
+        style={{height:60}}
         source={require('../../../assests/Dashboard/UserloginBG.png')}>
         <View style={{height: 60, width: '100%', flexDirection: 'row'}}>
 
 
 
-        <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={{flex:1,alignItems:"center",justifyContent:"center",backgroundColor:"black",opacity:0.7}}>
-          <View style={{backgroundColor:"white",elevation:10,width:200,height:200,borderRadius:5,alignItems:"center",justifyContent:"center"}}>
-
-
-            <TouchableOpacity 
-            onPress={()=>{
-              handleSubmitorder(selectedItem)
-            setModalVisible(false)
-            }}
-            style={{marginVertical:20,borderColor:"black",borderWidth:1,width:120,padding:10,alignItems:"center",justifyContent:"center",borderRadius:5,borderColor:"#00A9FF"}}>
-          <Text style={{fontSize:17,fontWeight:"700",color:"#00A9FF"}}>Check In</Text>
-
-            </TouchableOpacity>
-
-
-            <TouchableOpacity onPress={()=>{
-              navigation.navigate("OrderForm",{loginData:loginData,custId:selectedItem.id})
-              setModalVisible(false)
-              }} style={{marginVertical:20,borderColor:"black",borderWidth:1,width:120,padding:10,alignItems:"center",justifyContent:"center",borderRadius:5,borderColor:"#00A9FF"}}>
-
-          <Text style={{fontSize:17,fontWeight:"700",color:"#00A9FF"}}>Order Form</Text>
-            </TouchableOpacity>
-
-          </View>
-       
-        </View>
-      </Modal>
+      
 
 
 
@@ -561,7 +632,7 @@ if(loader){
               source={require('../../../assests/Dashboard/arrowwhite.png')}
             />
           </TouchableOpacity>
-          <View style={{width: '55%', height: 60, justifyContent: 'center'}}>
+          <View style={{justifyContent: 'center'}}>
             <Text
               style={{
                 fontSize: 17,
@@ -584,6 +655,75 @@ if(loader){
           margin: 20,
           flexDirection: 'row',
         }}>
+
+
+
+
+
+<Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        
+        onRequestClose={() => {
+          // Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+
+
+
+
+
+        <View style={{flex:1,alignItems:"center",justifyContent:"center",backgroundColor:"rgba(0, 0, 0, 0.58)"}}>
+
+      
+
+          <View style={{backgroundColor:"white",elevation:10,width:300,height:300,borderRadius:5,}}>
+
+
+          
+<TouchableOpacity onPress={()=>{
+  setModalVisible(false)
+}} style={{alignSelf:"flex-end",margin:5,}}>
+
+          <Entypo
+            name="cross"
+            color="grey"
+            size={50}
+            // style={{paddingRight: 10}}
+          />
+</TouchableOpacity>
+
+
+<View style={{alignItems:"center",justifyContent:"center"}}>
+            <TouchableOpacity 
+            onPress={()=>{
+              handleSubmitorder(selectedItem)
+            setModalVisible(false)
+            }}
+            style={{marginVertical:20,borderColor:"black",borderWidth:1,width:120,padding:10,alignItems:"center",justifyContent:"center",borderRadius:5,borderColor:"#00A9FF"}}>
+          <Text style={{fontSize:17,fontWeight:"700",color:"#00A9FF"}}>Check In</Text>
+
+            </TouchableOpacity>
+
+
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate("OrderForm",{loginData:loginData,custId:selectedItem.id})
+              setModalVisible(false)
+              }} style={{marginVertical:20,borderColor:"black",borderWidth:1,width:120,padding:10,alignItems:"center",justifyContent:"center",borderRadius:5,borderColor:"#00A9FF"}}>
+
+          <Text style={{fontSize:17,fontWeight:"700",color:"#00A9FF"}}>Order Form</Text>
+            </TouchableOpacity>
+
+</View>
+          </View>
+       
+        </View>
+       
+      </Modal>
+
+
+
         <View
           style={{
             width: '15%',
@@ -742,7 +882,7 @@ if(loader){
           </View>
         </View>
       </View>
-      <View style={{flex: 0.91}}>
+      <View style={{flex: 1}}>
         <View
           style={{
             height: '100%',

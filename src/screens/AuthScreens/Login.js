@@ -21,7 +21,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../redux/actions/authaction';
 import Loader from '../../utils/Loader';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 
 const Login = ({ route, navigation }) => {
   const { itemId } = route.params;
